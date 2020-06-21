@@ -26,7 +26,7 @@ function logikbox_house_plugin() {
 		'view_item'           	=> __( 'View House', 'lbx_house' ),
 		'add_new_item'        	=> __( 'Add New House', 'lbx_house' ),
 		'add_new'             	=> __( 'New House', 'lbx_house' ),
-		'edit_item'           	=> __( 'Edit TeHouseam', 'lbx_house' ),
+		'edit_item'           	=> __( 'Edit House', 'lbx_house' ),
 		'update_item'         	=> __( 'Update House', 'lbx_house' ),
 		'search_items'        	=> __( 'Search House', 'lbx_house' ),
 		'not_found'           	=> __( 'No article found', 'lbx_house' ),
@@ -56,6 +56,31 @@ function logikbox_house_plugin() {
 }
 
 add_action('init','logikbox_house_plugin');
+
+/* update message
+================================================== */
+
+function lbx_update_message_house( $messages )
+{
+	global $post, $post_ID;
+
+	$message['lbx_house'] = array(
+		0 => '',
+		1 => sprintf( __('House updated. <a href="%s">View House</a>', 'lbx_house' ), esc_url( get_permalink($post_ID) ) ),
+		2 => __('Custom field updated.', 'lbx_house' ),
+		3 => __('Custom field deleted.', 'lbx_house' ),
+		4 => __('House updated.', 'lbx_house' ),
+		5 => isset($_GET['revision']) ? sprintf( __('House restored to revision from %s', 'lbx_house' ), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
+		6 => sprintf( __('Team published. <a href="%s">View House</a>', 'lbx_house' ), esc_url( get_permalink($post_ID) ) ),
+		7 => __('Team saved.', 'lbx_house' ),
+		8 => sprintf( __('House submitted. <a target="_blank" href="%s">Preview Team</a>', 'lbx_house' ), esc_url( add_query_arg( 'preview', 'true', get_permalink($post_ID) ) ) ),
+		9 => sprintf( __('House scheduled for: <strong>%1$s</strong>. <a target="_blank" href="%2$s">Preview Team</a>', 'lbx_house' ), date_i18n( __( 'M j, Y @ G:i','lbx_house'), strtotime( $post->post_date ) ), esc_url( get_permalink($post_ID) ) ),
+		10 => sprintf( __('House draft updated. <a target="_blank" href="%s">Preview Team</a>', 'lbx_house' ), esc_url( add_query_arg( 'preview', 'true', get_permalink($post_ID) ) ) ),
+		);
+	return $message;
+}
+
+add_filter( 'post_updated_messages', 'lbx_update_message_house' );
 
 
 function add_post_meta_boxes() {
@@ -121,6 +146,8 @@ function post_meta_box_house_details(){
     echo "    <option value=\"mixed\" $mixedSelected>Mixed</option>";
     echo "</select>";
 }
+
+
 
 
 ?>
